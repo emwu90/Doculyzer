@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.36105.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doculyzer", "Doculyzer\Doculyzer.csproj", "{76DE395B-9661-450A-880C-DD824E36E578}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doculyzer.Core", "Doculyzer.Core\Doculyzer.Core.csproj", "{21E92842-CC5C-4F7C-9247-1FA34F73E56B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76DE395B-9661-450A-880C-DD824E36E578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76DE395B-9661-450A-880C-DD824E36E578}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76DE395B-9661-450A-880C-DD824E36E578}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76DE395B-9661-450A-880C-DD824E36E578}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21E92842-CC5C-4F7C-9247-1FA34F73E56B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21E92842-CC5C-4F7C-9247-1FA34F73E56B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21E92842-CC5C-4F7C-9247-1FA34F73E56B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21E92842-CC5C-4F7C-9247-1FA34F73E56B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F52219EA-9F00-48FE-AFE7-677FAC6EDFB1}
+	EndGlobalSection
+EndGlobal
