@@ -1,10 +1,10 @@
 using Doculyzer.Core.Mediator;
+using Doculyzer.Extensions;
 using Doculyzer.Request;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
 using System.Net;
 using System.Text.Json;
 
@@ -45,17 +45,11 @@ public class DoculyzerAgent
         _logger.LogInformation("Processing document query request for prompt: {Prompt}", queryRequest.Prompt);
 
         var result = await _mediator.SendAsync(queryRequest, cancellationToken);
-
-        var response = request.CreateResponse(HttpStatusCode.OK);
-        response.Headers.Add("Content-Type", "application/json");
-
-        var jsonResponse = JsonSerializer.Serialize(result, new JsonSerializerOptions
+        if (!result.IsSuccessful)
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = true
-        });
+            return await request.CreateJsonResponseAsync(HttpStatusCode.InternalServerError, new DocumentQueryResult { ErrorMessage = result.ErrorMessage });
+        }
 
-        await response.WriteStringAsync(jsonResponse);
-        return response;
+        return await request.CreateJsonResponseAsync(HttpStatusCode.OK, result);
     }
 }

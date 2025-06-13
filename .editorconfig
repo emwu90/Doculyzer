@@ -252,5 +252,5 @@ end_of_line = crlf
 dotnet_style_coalesce_expression = true:suggestion
 [*]
 vsspell_section_id = 190282ff8c2e4635a16d4a2bfae49499
-vsspell_ignored_words_190282ff8c2e4635a16d4a2bfae49499 = Api|Doculyzer|Metadata|Pdf
+vsspell_ignored_words_190282ff8c2e4635a16d4a2bfae49499 = Api|Doculyzer|Metadata|Pdf|Json
 
