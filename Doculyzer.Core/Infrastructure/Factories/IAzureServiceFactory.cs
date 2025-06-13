@@ -1,4 +1,5 @@
-﻿using Azure.AI.FormRecognizer.DocumentAnalysis;
+﻿using Azure.AI.ContentSafety;
+using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Azure.Search.Documents;
 using Azure.Storage.Blobs;
 using OpenAI;
@@ -14,5 +15,7 @@ namespace Doculyzer.Core.Infrastructure.Factories
         DocumentAnalysisClient CreateDocumentAnalysisClient();
 
         OpenAIClient CreateOpenAIClient();
+
+        ContentSafetyClient CreateContentSafetyClient();
     }
 }

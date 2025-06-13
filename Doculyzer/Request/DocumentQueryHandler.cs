@@ -29,14 +29,32 @@ namespace Doculyzer.Request
         {
             try
             {
-                // Step 1: Parse the natural language query to extract intent and parameters
-                var queryIntent = await _openAIService.ParseQueryIntentAsync(request.Prompt, cancellationToken) ?? throw new InvalidOperationException("Query intent could not be parsed.");
+                // Step 1: Check for toxic content in the query
+                if (await _openAIService.IsContentToxicAsync(request.Prompt, cancellationToken))
+                {
+                    _logger.LogWarning("Toxic content detected in query: {Prompt}", request.Prompt);
+                    return new DocumentQueryResult
+                    {
+                        IsSuccessful = false,
+                        ErrorMessage = "The query contains inappropriate content and cannot be processed."
+                    };
+                }
 
-                // Step 2: Search for relevant invoices based on the parsed intent
+                // Step 2: Parse the natural language query to extract intent and parameters
+                var queryIntent = await _openAIService.ParseQueryIntentAsync(request.Prompt, cancellationToken)
+                                  ?? throw new InvalidOperationException("Query intent could not be parsed.");
+
+                // Step 3: Search for relevant invoices based on the parsed intent
                 var relevantInvoices = await SearchInvoicesAsync(queryIntent, cancellationToken);
 
-                // Step 3: Analyze the invoices to generate the answer
+                // Step 4: Analyze the invoices to generate the answer
                 var answer = await _analysisService.AnalyzeInvoicesForQueryAsync(relevantInvoices, request.Prompt, cancellationToken);
+
+                // Step 5: Check if the answer indicates no response
+                if (string.IsNullOrWhiteSpace(answer) || answer.Contains("cannot answer", StringComparison.OrdinalIgnoreCase))
+                {
+                    relevantInvoices.Clear();
+                }
 
                 return new DocumentQueryResult
                 {
