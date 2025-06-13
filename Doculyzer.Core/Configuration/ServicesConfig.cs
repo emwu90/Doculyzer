@@ -22,5 +22,9 @@
         public required string SearchServiceApiKey { get; set; }
 
         public required string SearchIndexName { get; set; }
+
+        public required string ContentSafetyEndpoint { get; set; }
+
+        public required string ContentSafetyApiKey { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Azure.AI.ContentSafety;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Azure.AI.OpenAI;
 using Azure.Search.Documents;
@@ -38,6 +39,12 @@ namespace Doculyzer.Core.Infrastructure.Factories
         public OpenAIClient CreateOpenAIClient()
         {
             return new AzureOpenAIClient(new Uri(_config.OpenAIEndpoint), new AzureKeyCredential(_config.OpenAIApiKey));
+        }
+
+        public ContentSafetyClient CreateContentSafetyClient()
+        {
+            var credential = new AzureKeyCredential(_config.ContentSafetyApiKey);
+            return new ContentSafetyClient(new Uri(_config.ContentSafetyEndpoint), credential);
         }
     }
 }
