@@ -4,12 +4,14 @@ using Doculyzer.Core.Infrastructure.Repositories;
 using Doculyzer.Core.Mediator;
 using Doculyzer.Core.Services;
 using Doculyzer.Request;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
@@ -24,9 +26,22 @@ builder.Services.AddSingleton<IMediator, Mediator>();
 // Register Azure service factories
 builder.Services.AddSingleton<IAzureServiceFactory, AzureServiceFactory>();
 
+// Register CosmosClient using IAzureServiceFactory
+builder.Services.AddSingleton(sp =>
+{
+    var serviceFactory = sp.GetRequiredService<IAzureServiceFactory>();
+    return serviceFactory.CreateCosmosClient();
+});
+
 // Register repositories
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IInvoiceSearchRepository, InvoiceSearchRepository>();
+builder.Services.AddScoped<IEvaluationMetricsRepository>(sp =>
+{
+    var config = sp.GetRequiredService<IOptions<ServicesConfig>>().Value;
+    var cosmosClient = sp.GetRequiredService<CosmosClient>();
+    return new EvaluationMetricsRepository(cosmosClient, config.CosmosDBDatabaseName, config.CosmosDBContainerName);
+});
 
 // Register services
 builder.Services.AddScoped<IInvoiceAnalysisService, InvoiceAnalysisService>();

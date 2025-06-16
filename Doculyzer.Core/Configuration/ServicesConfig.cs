@@ -26,5 +26,13 @@
         public required string ContentSafetyEndpoint { get; set; }
 
         public required string ContentSafetyApiKey { get; set; }
+
+        public required string CosmosDBEndpoint { get; set; }
+
+        public required string CosmosDBPrimaryKey { get; set; }
+
+        public required string CosmosDBDatabaseName { get; set; }
+
+        public required string CosmosDBContainerName { get; set; }
     }
 }

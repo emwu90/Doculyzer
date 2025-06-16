@@ -5,6 +5,7 @@
         DateRange,
         Customer,
         Product,
-        General
+        General,
+        Invalid
     }
 }
