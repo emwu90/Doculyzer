@@ -76,6 +76,11 @@ namespace Doculyzer.Request
 
         private async Task<List<Invoice>> SearchInvoicesAsync(QueryIntent intent, CancellationToken cancellationToken)
         {
+            if (intent.QueryType == QueryType.Invalid)
+            {
+                return [];
+            }
+
             return intent.QueryType switch
             {
                 QueryType.DateRange => await _searchRepository.GetInvoicesByDateRangeAsync(

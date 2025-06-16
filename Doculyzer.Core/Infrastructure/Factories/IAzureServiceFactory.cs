@@ -2,6 +2,7 @@
 using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Azure.Search.Documents;
 using Azure.Storage.Blobs;
+using Microsoft.Azure.Cosmos;
 using OpenAI;
 
 namespace Doculyzer.Core.Infrastructure.Factories
@@ -17,5 +18,7 @@ namespace Doculyzer.Core.Infrastructure.Factories
         OpenAIClient CreateOpenAIClient();
 
         ContentSafetyClient CreateContentSafetyClient();
+
+        CosmosClient CreateCosmosClient();
     }
 }

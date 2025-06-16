@@ -5,6 +5,7 @@ using Azure.AI.OpenAI;
 using Azure.Search.Documents;
 using Azure.Storage.Blobs;
 using Doculyzer.Core.Configuration;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
 using OpenAI;
 
@@ -45,6 +46,19 @@ namespace Doculyzer.Core.Infrastructure.Factories
         {
             var credential = new AzureKeyCredential(_config.ContentSafetyApiKey);
             return new ContentSafetyClient(new Uri(_config.ContentSafetyEndpoint), credential);
+        }
+
+        public CosmosClient CreateCosmosClient()
+        {
+            var options = new CosmosClientOptions
+            {
+                SerializerOptions = new CosmosSerializationOptions
+                {
+                    PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
+                }
+            };
+
+            return new CosmosClient(_config.CosmosDBEndpoint, _config.CosmosDBPrimaryKey, options);
         }
     }
 }
