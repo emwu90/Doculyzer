@@ -57,10 +57,6 @@ builder.Services.AddOptions<ServicesConfig>()
         configuration.GetSection("ServicesConfig").Bind(settings);
     });
 
-builder.Services
-    .AddApplicationInsightsTelemetryWorkerService()
-    .ConfigureFunctionsApplicationInsights();
-
 builder.Logging.Services.Configure<LoggerFilterOptions>(options =>
 {
     // The Application Insights SDK adds a default logging filter that instructs ILogger to capture only Warning and more severe logs. Application Insights requires an explicit override.
