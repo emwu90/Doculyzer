@@ -187,14 +187,41 @@ Latency: {latency.TotalMilliseconds}
             var evaluationResponse = await _chatClient.CompleteChatAsync(messages, chatCompletionOptions, cancellationToken);
             var evaluationJson = evaluationResponse.Value.Content.Last().Text;
 
-            return JsonSerializer.Deserialize<EvaluationMetrics>(evaluationJson) ?? new EvaluationMetrics
+            var llmScores = JsonSerializer.Deserialize<EvaluationMetrics>(evaluationJson) ?? new EvaluationMetrics
             {
                 Groundedness = 0,
                 Relevance = 0,
                 Completeness = 0,
-                Latency = latency.TotalMicroseconds,
+                Latency = latency.TotalMilliseconds,
                 Timestamp = DateTime.UtcNow,
             };
+
+            var groundedness = (llmScores.Groundedness + CalculateGroundedness(response, invoices)) / 2;
+            var completeness = (llmScores.Completeness + CalculateCompleteness(response, query)) / 2;
+
+            return new EvaluationMetrics
+            {
+                Query = llmScores.Query,
+                Response = llmScores.Response,
+                Groundedness = groundedness,
+                Relevance = llmScores.Relevance,
+                Completeness = completeness,
+                Latency = latency.TotalMilliseconds,
+                Timestamp = DateTime.UtcNow
+            };
+        }
+
+        private static double CalculateGroundedness(string response, List<Invoice> invoices)
+        {
+            var invoiceNumbers = invoices.Select(i => i.InvoiceNumber).ToList();
+            return invoiceNumbers.Any(num => response.Contains(num)) ? 1.0 : 0.0;
+        }
+
+        private static double CalculateCompleteness(string response, string query)
+        {
+            var requiredKeywords = query.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var matchedKeywords = requiredKeywords.Count(keyword => response.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+            return (double)matchedKeywords / requiredKeywords.Length;
         }
     }
 }
