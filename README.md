@@ -43,23 +43,23 @@ This system uses a modern, scalable architecture with the following components:
 
 ## API Endpoints
 
-### POST /api/invoices/query
+### POST /api/agent
 Processes natural language queries about invoices.
 
 **Request Body:**
 ```json
 {
-  "prompt": "What's the total amount of invoices in March 2024?"
+  "Prompt": "What's the total amount of invoices in March 2024?"
 }
 ```
 
 **Response:**
 ```json
 {
-  "answer": "The total amount of invoices in March 2024 is $45,230.50 across 23 invoices.",
-  "relevantInvoices": [...],
-  "queryInterpretation": "DateRange query for March 2024",
-  "success": true
+  "Answer": "The total amount of invoices in March 2024 is $45,230.50 across 23 invoices.",
+  "RelevantInvoices": [...],
+  "IsSuccessful": true,
+  "ErrorMessage": null
 }
 ```
 
@@ -67,27 +67,56 @@ Processes natural language queries about invoices.
 
 1. **Create Azure Resources:**
    - Storage Account with 'invoices' container
-   - Azure OpenAI Service with GPT-4 deployment
+   - Azure OpenAI Service with GPT-4 deployment model
    - Document Intelligence Service
    - Azure AI Search Service
+   - Content Safety Service
    - Function App
+   - Azure Cosmos DB
+   - Key vault
+   - Application Insights
 
 2. **Configure Azure AI Search Index:**
    Create an index with the following fields:
    - Id (string, key)
-   - BlobName (string, searchable)
-   - InvoiceNumber (string, searchable)
-   - InvoiceDate (datetime, filterable)
-   - CustomerName (string, searchable)
-   - CustomerId (string, filterable)
-   - TotalAmount (decimal, filterable)
-   - Currency (string, filterable)
+   - BlobName (string, filterable, searchable)
+   - InvoiceNumber (string, filterable, searchable)
+   - InvoiceDate (DateTimeOffset, filterable)
+   - CustomerName (string, filterable, searchable)
+   - CustomerId (string, filterable, searchable)
+   - TotalAmount (double, filterable)
+   - Currency (string, filterable, searchable)
    - LineItems (complex collection)
+		- ProductName (string, filterable, searchable)
+		- ProductCode (string, filterable, searchable)
+		- Quantity (int32, filterable)
+		- UnitPrice (int32, filterable)
+		- TotalPrice (int32, filterable)
+		- Description (string, filterable, searchable)
 
-3. **Set Environment Variables:**
+3. **Configure Cosmos DB:**
+   Create database with container for metrics. Use '/id' as partition key.
+
+4. **Set Environment Variables for Function App:**
+   - ServicesConfig:ContentSafetyApiKey (Key vault reference)
+   - ServicesConfig:ContentSafetyEndpoint
+   - ServicesConfig:CosmosDBContainerName
+   - ServicesConfig:CosmosDBDatabaseName
+   - ServicesConfig:CosmosDBEndpoint
+   - ServicesConfig:CosmosDBPrimaryKey (Key vault reference)
+   - ServicesConfig:DocumentIntelligenceApiKey (Key vault reference)
+   - ServicesConfig:DocumentIntelligenceEndpoint
+   - ServicesConfig:InvoiceContainerName
+   - ServicesConfig:OpenAIApiKey (Key vault reference)
+   - ServicesConfig:OpenAIDeploymentName
+   - ServicesConfig:OpenAIEndpoint
+   - ServicesConfig:SearchIndexName
+   - ServicesConfig:SearchServiceApiKey (Key vault reference)
+   - ServicesConfig:SearchServiceEndpoint
+   - ServicesConfig:StorageConnectionString (Key vault reference)
    Update local.settings.json with your Azure service endpoints and keys.
 
-4. **Deploy:**
+5. **Deploy:**
    Use Azure Functions Core Tools or Visual Studio for deployment.
 
 ## Usage Examples
@@ -96,7 +125,7 @@ Processes natural language queries about invoices.
 - "What's the total amount of invoices in March 2024?"
 - "Give me list of products sold to customer ABC123 in April"
 - "How much did we invoice customer XYZ last quarter?"
-- "What are the top 5 products by revenue this year?"
+- "Can you give me total amout for invoices between January 2024 and March 2024?"
 
 **Automatic Processing:**
 - Upload PDF invoices to the 'invoices' blob container
@@ -113,5 +142,4 @@ Processes natural language queries about invoices.
 ## Error Handling
 
 - Comprehensive try-catch blocks with meaningful error messages
-- Graceful degradation when services are unavailable
 - Proper HTTP status codes and error responses
