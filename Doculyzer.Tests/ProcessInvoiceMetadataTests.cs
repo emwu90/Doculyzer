@@ -1,5 +1,6 @@
 ﻿using Doculyzer.Core.Mediator;
 using Doculyzer.Request;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace Doculyzer.Tests;
@@ -8,13 +9,15 @@ namespace Doculyzer.Tests;
 public class ProcessInvoiceMetadataTests
 {
     private Mock<IMediator> _mediatorMock = null!;
+    private Mock<ILogger<ProcessInvoiceMetadata>> _loggerMock = null!;
     private ProcessInvoiceMetadata _function = null!;
 
     [TestInitialize]
     public void Setup()
     {
         _mediatorMock = new Mock<IMediator>();
-        _function = new ProcessInvoiceMetadata(_mediatorMock.Object);
+        _loggerMock = new Mock<ILogger<ProcessInvoiceMetadata>>();
+        _function = new ProcessInvoiceMetadata(_mediatorMock.Object, _loggerMock.Object);
     }
 
     [TestMethod]

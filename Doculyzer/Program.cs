@@ -34,9 +34,9 @@ builder.Services.AddSingleton(sp =>
 });
 
 // Register repositories
-builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
-builder.Services.AddScoped<IInvoiceSearchRepository, InvoiceSearchRepository>();
-builder.Services.AddScoped<IEvaluationMetricsRepository>(sp =>
+builder.Services.AddSingleton<IInvoiceRepository, InvoiceRepository>();
+builder.Services.AddSingleton<IInvoiceSearchRepository, InvoiceSearchRepository>();
+builder.Services.AddSingleton<IEvaluationMetricsRepository>(sp =>
 {
     var config = sp.GetRequiredService<IOptions<ServicesConfig>>().Value;
     var cosmosClient = sp.GetRequiredService<CosmosClient>();
@@ -44,8 +44,8 @@ builder.Services.AddScoped<IEvaluationMetricsRepository>(sp =>
 });
 
 // Register services
-builder.Services.AddScoped<IInvoiceAnalysisService, InvoiceAnalysisService>();
-builder.Services.AddScoped<IAzureOpenAIService, AzureOpenAIService>();
+builder.Services.AddSingleton<IInvoiceAnalysisService, InvoiceAnalysisService>();
+builder.Services.AddSingleton<IAzureOpenAIService, AzureOpenAIService>();
 
 // Register handlers
 builder.Services.AddTransient<IRequestHandler<DocumentQueryRequest, DocumentQueryResult>, DocumentQueryHandler>();

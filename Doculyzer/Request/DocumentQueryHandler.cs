@@ -3,6 +3,7 @@ using Doculyzer.Core.Mediator;
 using Doculyzer.Core.Models;
 using Doculyzer.Core.Services;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace Doculyzer.Request
 {
@@ -30,9 +31,11 @@ namespace Doculyzer.Request
             try
             {
                 // Step 1: Check for toxic content in the query
+                SanitizeAndValidatePrompt(request.Prompt);
+
                 if (await _openAIService.IsContentToxicAsync(request.Prompt, cancellationToken))
                 {
-                    _logger.LogWarning("Toxic content detected in query: {Prompt}", request.Prompt);
+                    _logger.LogWarning("Toxic content detected in query");
                     return new DocumentQueryResult
                     {
                         IsSuccessful = false,
@@ -104,6 +107,20 @@ namespace Doculyzer.Request
                     null,
                     cancellationToken)
             };
+        }
+
+        private static string SanitizeAndValidatePrompt(string prompt)
+        {
+            if (prompt.Length < 3)
+                throw new InvalidOperationException("Prompt is too short.");
+
+            var lower = prompt.ToLowerInvariant();
+            if (lower.Contains("ignore previous") || lower.Contains("disregard above") || lower.Contains("<script>"))
+                throw new InvalidOperationException("Prompt contains potentially dangerous content.");
+
+            var sanitized = new string([.. prompt.Where(c => !char.IsControl(c))]).Trim();
+            sanitized = sanitized.Normalize(NormalizationForm.FormC);
+            return sanitized;
         }
     }
 }

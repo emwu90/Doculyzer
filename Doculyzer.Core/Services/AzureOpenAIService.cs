@@ -106,7 +106,7 @@ If you cannot answer based on the provided data, say so clearly and include 'can
 
             if (await IsContentToxicAsync(responseText, cancellationToken))
             {
-                _logger.LogWarning("Toxic content detected in AI response: {Response}", responseText);
+                _logger.LogWarning("Toxic content detected in AI response.");
                 return "The response contains inappropriate content and has been filtered.";
             }
 

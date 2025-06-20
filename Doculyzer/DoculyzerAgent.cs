@@ -42,7 +42,7 @@ public class DoculyzerAgent
             return badRequestResponse;
         }
 
-        _logger.LogInformation("Processing document query request for prompt: {Prompt}", queryRequest.Prompt);
+        _logger.LogInformation("Started processing document query request.");
 
         var result = await _mediator.SendAsync(queryRequest, cancellationToken);
         if (!result.IsSuccessful)
