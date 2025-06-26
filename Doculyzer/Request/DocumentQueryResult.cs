@@ -11,5 +11,7 @@ namespace Doculyzer.Request
         public bool IsSuccessful { get; set; } = false;
 
         public string? ErrorMessage { get; set; }
+
+        public string? ResponseId { get; set; }
     }
 }

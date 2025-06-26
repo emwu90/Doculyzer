@@ -38,7 +38,7 @@ public class DocumentQueryHandlerTests
         var request = new DocumentQueryRequest { Prompt = "Find all invoices" };
         var queryIntent = new QueryIntent { QueryType = QueryType.General, SearchTerm = "invoices" };
         var invoices = new List<Invoice> { new Invoice { InvoiceNumber = "12345" } };
-        var answer = "Invoices found";
+        var responseResult = new ResponseResult { ResponseText = "Invoices found", ResponseId = "e5881ef1" };
 
         _openAIServiceMock
             .Setup(s => s.ParseQueryIntentAsync(request.Prompt, It.IsAny<CancellationToken>()))
@@ -50,14 +50,14 @@ public class DocumentQueryHandlerTests
 
         _analysisServiceMock
             .Setup(a => a.AnalyzeInvoicesForQueryAsync(invoices, request.Prompt, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(answer);
+            .ReturnsAsync(responseResult);
 
         // Act
         var result = await _handler.HandleAsync(request, CancellationToken.None);
 
         // Assert
         Assert.IsTrue(result.IsSuccessful);
-        Assert.AreEqual(answer, result.Answer);
+        Assert.AreEqual(responseResult.ResponseText, result.Answer);
         CollectionAssert.AreEqual(invoices, result.RelevantInvoices);
     }
 

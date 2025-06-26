@@ -50,6 +50,7 @@ builder.Services.AddSingleton<IAzureOpenAIService, AzureOpenAIService>();
 // Register handlers
 builder.Services.AddTransient<IRequestHandler<DocumentQueryRequest, DocumentQueryResult>, DocumentQueryHandler>();
 builder.Services.AddTransient<IRequestHandler<ProcessInvoiceMetadataRequest, ProcessInvoiceMetadataResult>, ProcessInvoiceMetadataHandler>();
+builder.Services.AddTransient<IRequestHandler<SubmitFeedbackRequest, SubmitFeedbackResult>, SubmitFeedbackHandler>();
 
 builder.Services.AddOptions<ServicesConfig>()
     .Configure<IConfiguration>((settings, configuration) =>

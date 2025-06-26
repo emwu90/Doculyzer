@@ -51,19 +51,20 @@ namespace Doculyzer.Request
                 var relevantInvoices = await SearchInvoicesAsync(queryIntent, cancellationToken);
 
                 // Step 4: Analyze the invoices to generate the answer
-                var answer = await _analysisService.AnalyzeInvoicesForQueryAsync(relevantInvoices, request.Prompt, cancellationToken);
+                var responseResult = await _analysisService.AnalyzeInvoicesForQueryAsync(relevantInvoices, request.Prompt, cancellationToken);
 
                 // Step 5: Check if the answer indicates no response
-                if (string.IsNullOrWhiteSpace(answer) || answer.Contains("cannot answer", StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrWhiteSpace(responseResult.ResponseText) || responseResult.ResponseText.Contains("cannot answer", StringComparison.OrdinalIgnoreCase))
                 {
                     relevantInvoices.Clear();
                 }
 
                 return new DocumentQueryResult
                 {
-                    Answer = answer,
+                    Answer = responseResult.ResponseText,
                     RelevantInvoices = relevantInvoices,
-                    IsSuccessful = true
+                    IsSuccessful = true,
+                    ResponseId = responseResult.ResponseId
                 };
             }
             catch (Exception exception)

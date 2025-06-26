@@ -6,9 +6,7 @@
 
 - **Natural Language Interface**: Ask questions like “What’s the total amount due in March invoices?” or “Which invoices are overdue?”
 - **Storage Integration**: Connects to your Azure Blob Storage to access and analyze invoice documents.
-- **Multi-format Support**: Works with PDFs.
 - **Context-Aware Answers**: Understands invoice structure and terminology to provide accurate, context-rich responses.
-- **Extensible Agent Framework**: Built to be modular—easily extend to other document types or storage backends.
 
 ## 🧠 Use Cases
 
@@ -38,8 +36,6 @@ This system uses a modern, scalable architecture with the following components:
 ### Performance Optimizations:
 - **Azure AI Search Integration** - Instead of iterating through 100,000+ blob metadata entries, we use Azure AI Search for efficient querying
 - **Metadata-Based Filtering** - Quick filtering using blob metadata before expensive operations
-- **Async/Await Pattern** - Non-blocking operations throughout
-- **Streaming** - Efficient handling of large PDF files
 
 ## API Endpoints
 
@@ -59,6 +55,26 @@ Processes natural language queries about invoices.
   "Answer": "The total amount of invoices in March 2024 is $45,230.50 across 23 invoices.",
   "RelevantInvoices": [...],
   "IsSuccessful": true,
+  "ErrorMessage": null,
+  "ResponseId": "e5881ef1-ae6c-4604-94d1-cd69cdb6c42a"
+}
+```
+
+### POST /api/feedback
+Submit user feedback for an AI response.
+
+**Request Body:**
+```json
+{
+  "ResponseId": "e5881ef1-ae6c-4604-94d1-cd69cdb6c42a",
+  "IsSatisfactory": true
+}
+```
+
+**Response:**
+```json
+{
+  "Success": true,
   "ErrorMessage": null
 }
 ```

@@ -20,5 +20,7 @@ namespace Doculyzer.Core.Models
         public double Latency { get; set; } // Measures the time taken to generate the response
 
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+
+        public bool? UserFeedback { get; set; } // Indicates if the user found the response satisfactory
     }
 }
