@@ -59,6 +59,26 @@ Processes natural language queries about invoices.
   "Answer": "The total amount of invoices in March 2024 is $45,230.50 across 23 invoices.",
   "RelevantInvoices": [...],
   "IsSuccessful": true,
+  "ErrorMessage": null,
+  "ResponseId": "e5881ef1-ae6c-4604-94d1-cd69cdb6c42a"
+}
+```
+
+### POST /api/feedback
+Submit user feedback for an AI response.
+
+**Request Body:**
+```json
+{
+  "ResponseId": "e5881ef1-ae6c-4604-94d1-cd69cdb6c42a",
+  "IsSatisfactory": true
+}
+```
+
+**Response:**
+```json
+{
+  "Success": true,
   "ErrorMessage": null
 }
 ```

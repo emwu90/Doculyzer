@@ -15,7 +15,7 @@ namespace Doculyzer.Core.Services
             _serviceFactory = serviceFactory;
         }
 
-        public async Task<string> AnalyzeInvoicesForQueryAsync(List<Invoice> invoices, string query, CancellationToken cancellationToken = default)
+        public async Task<ResponseResult> AnalyzeInvoicesForQueryAsync(List<Invoice> invoices, string query, CancellationToken cancellationToken = default)
         {
             return await _openAIService.GenerateAnswerAsync(query, invoices, cancellationToken);
         }

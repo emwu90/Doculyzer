@@ -18,5 +18,20 @@ namespace Doculyzer.Core.Infrastructure.Repositories
         {
             await _container.CreateItemAsync(metrics, new PartitionKey(metrics.Id), cancellationToken: cancellationToken);
         }
+
+        public async Task UpdateUserFeedbackAsync(string id, bool feedback, CancellationToken cancellationToken = default)
+        {
+            var patchOperations = new List<PatchOperation>
+            {
+                PatchOperation.Set("/userFeedback", feedback)
+            };
+
+            await _container.PatchItemAsync<EvaluationMetrics>(
+                id,
+                new PartitionKey(id),
+                patchOperations,
+                cancellationToken: cancellationToken
+            );
+        }
     }
 }

@@ -70,7 +70,7 @@ Examples:
             return JsonSerializer.Deserialize<QueryIntent>(jsonResponse, options) ?? new QueryIntent { QueryType = QueryType.General };
         }
 
-        public async Task<string> GenerateAnswerAsync(string prompt, List<Invoice> invoices, CancellationToken cancellationToken = default)
+        public async Task<ResponseResult> GenerateAnswerAsync(string prompt, List<Invoice> invoices, CancellationToken cancellationToken = default)
         {
             var invoiceContext = JsonSerializer.Serialize(invoices, new JsonSerializerOptions { WriteIndented = true });
 
@@ -107,10 +107,10 @@ If you cannot answer based on the provided data, say so clearly and include 'can
             if (await IsContentToxicAsync(responseText, cancellationToken))
             {
                 _logger.LogWarning("Toxic content detected in AI response.");
-                return "The response contains inappropriate content and has been filtered.";
+                return new ResponseResult { ResponseText = "The response contains inappropriate content and has been filtered." };
             }
 
-            return responseText;
+            return new ResponseResult { ResponseId = evaluationMetrics.Id, ResponseText = responseText };
         }
 
         public async Task<bool> IsContentToxicAsync(string content, CancellationToken cancellationToken = default)
